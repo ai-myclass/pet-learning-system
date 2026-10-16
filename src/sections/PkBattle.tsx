@@ -25,6 +25,7 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { Pet } from '@/components/Pet';
+import { TempGroupPK } from '@/sections/TempGroupPK';
 import { useQuestionBank, type Question, type QuestionBank, type QuestionType } from '@/hooks/useQuestionBank';
 import type { Student, PetType } from '@/types/pet';
 import { getStageByExperience } from '@/types/pet';
@@ -1347,7 +1348,7 @@ export function PkBattle({ students, petTypes, onAddPoints }: PkBattleProps) {
     }
   }, [saveError]);
 
-  const [tab, setTab] = useState<'battle' | 'banks'>('battle');
+  const [tab, setTab] = useState<'battle' | 'banks' | 'temp'>('battle');
   const [leftStudent, setLeftStudent] = useState<Student | null>(null);
   const [rightStudent, setRightStudent] = useState<Student | null>(null);
   const [selectedBankId, setSelectedBankId] = useState<string>('');
@@ -1412,6 +1413,12 @@ export function PkBattle({ students, petTypes, onAddPoints }: PkBattleProps) {
           }`}
           onClick={() => setTab('banks')}
         >📚 题库管理</button>
+        <button
+          className={`px-5 py-2 rounded-lg text-sm font-medium transition-all ${
+            tab === 'temp' ? 'bg-white shadow text-foreground' : 'text-muted-foreground hover:text-foreground'
+          }`}
+          onClick={() => setTab('temp')}
+        >🎯 临时分组</button>
         {banks.length > 0 && (
           <Badge variant="secondary" className="self-center text-xs">
             {banks.length} 个题库
@@ -1431,6 +1438,11 @@ export function PkBattle({ students, petTypes, onAddPoints }: PkBattleProps) {
           onUpdateQuestion={updateQuestion}
           onDeleteQuestion={deleteQuestion}
         />
+      )}
+
+      {/* 临时分组 PK */}
+      {tab === 'temp' && (
+        <TempGroupPK students={students} petTypes={petTypes} onAddPoints={onAddPoints} />
       )}
 
       {/* PK 对战页面 */}
